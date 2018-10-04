@@ -94,12 +94,27 @@ OpcodeTable::OpcodeTable()
   myArray[LB].op_field = "100000";
   myArray[LB].funct_field = "";
 
+  //J
+  myArray[J].name = "j";
+  myArray[J].numOps = 1;
+  myArray[J].rdPos = -1;
+  myArray[J].rsPos = -1;
+  myArray[J].rtPos = -1;
+  myArray[J].immPos = 2;
+  myArray[J].instType = JTYPE;
+  myArray[J].op_field = "000010";
+  myArray[J].funct_field = "";
 
-
-
-
-
-
+  //UNDEFINED
+  myArray[UNDEFINED].name = "undefined";
+  myArray[UNDEFINED].numOps = 0;
+  myArray[UNDEFINED].rdPos = -1;
+  myArray[UNDEFINED].rsPos = -1;
+  myArray[UNDEFINED].rtPos = -1;
+  myArray[UNDEFINED].immPos = -1;
+  myArray[UNDEFINED].instType = JTYPE; // TODO: Undefine type
+  myArray[UNDEFINED].op_field = ""; 
+  myArray[UNDEFINED].funct_field = "";
 
 }
 
