@@ -258,7 +258,22 @@ string ASMParser::encode(Instruction i)
   // Given a valid instruction, returns a string representing the 32 bit MIPS binary encoding
   // of that instruction.
 {
-  // Your code here
+  string line = i.getline;
+  string opCode = "";
+  string opErand = "";
+  int numOp = 0;
+
+  i.getTokens(line, opCode, opErand, numOp);
+  if (opCode = "000000") //RTYPE
+  {
+   /* code */
+  }else if (opCode = "000010")//JTYPE
+  {
+  /* code */ 
+  }else{
+  //ITYPE
+  /* code */
+  }
   return "";
 }
 
