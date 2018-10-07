@@ -238,9 +238,11 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
 	return false;
     }
     else{
+
       if(opcodes.isIMMLabel(o)){  // Can the operand be a label?
 	// Assign the immediate field an address
 	imm = myLabelAddress;
+
 	myLabelAddress += 4;  // increment the label generator
       }
       else  // There is an error
@@ -271,50 +273,68 @@ string ASMParser::encode(Instruction i)
     encoding = encodeJType(i);
   else
     encoding = encodeIType(i);
-    return encoding;
+  return encoding;
 }
-//string ASMParser::toBinary(Register a){
 
-//}
 
 string ASMParser::encodeRType(Instruction i){
    Opcode opcode = i.getOpcode();
-   std::stringstream as;
-   as << opcodes.getOpcodeField(opcode);
+   stringstream ss;
+   ss << opcodes.getOpcodeField(opcode);
    Register rs = i.getRS();
    Register rd = i.getRD();
    Register rt = i.getRT();
    int imm = i.getImmediate();
 
    if (opcodes.RSposition(opcode) == -1)
-     as << "00000";
+     ss << "00000";
    else
-     as << std::bitset<5>(rs).to_string();
-
-   if (opcodes.RDposition(opcode) == -1)
-     as << "00000";
-   else
-     as << std::bitset<5>(rd).to_string();
+     ss << bitset<5>(rs).to_string();
 
    if (opcodes.RTposition(opcode) == -1)
-     as << "00000";
+     ss << "00000";
    else
-     as << std::bitset<5>(rt).to_string();
+     ss << bitset<5>(rt).to_string();
+
+   if (opcodes.RDposition(opcode) == -1)
+     ss << "00000";
+   else
+     ss << bitset<5>(rd).to_string();
+
 
    if (opcodes.IMMposition(opcode) == -1)
-     as << "00000";
+     ss << "00000";
    else
-     as << std::bitset<5>(imm).to_string();
+     ss << bitset<5>(imm).to_string();
 
-   as << opcodes.getFunctField(opcode);
+   ss << opcodes.getFunctField(opcode);
 
-   return  as.str();
+   return ss.str();
 }
 
 string ASMParser::encodeJType(Instruction i){
-  return "";
+  Opcode opcode = i.getOpcode();
+  stringstream ss;
+  ss << opcodes.getOpcodeField(opcode);
+
+  int imm = i.getImmediate()/4;
+  ss << bitset<26>(imm).to_string();
+
+  return ss.str();
 }
 
 string ASMParser::encodeIType(Instruction i){
-  return "";
+  Opcode opcode = i.getOpcode();
+  stringstream ss;
+  ss << opcodes.getOpcodeField(opcode);
+
+  Register rs = i.getRS();
+  Register rt = i.getRT();
+  int imm = i.getImmediate();
+
+  ss << bitset<5>(rs).to_string();
+  ss << bitset<5>(rt).to_string();
+  ss << bitset<16>(imm).to_string();
+
+  return ss.str();
 }

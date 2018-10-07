@@ -87,9 +87,9 @@ OpcodeTable::OpcodeTable()
   myArray[LB].name = "lb";
   myArray[LB].numOps = 3;
   myArray[LB].rdPos = -1;
-  myArray[LB].rsPos = 1;
+  myArray[LB].rsPos = 2;
   myArray[LB].rtPos = 0;
-  myArray[LB].immPos = 2;
+  myArray[LB].immPos = 1;
   myArray[LB].instType = ITYPE;
   myArray[LB].op_field = "100000";
   myArray[LB].funct_field = "";
@@ -100,12 +100,13 @@ OpcodeTable::OpcodeTable()
   myArray[J].rdPos = -1;
   myArray[J].rsPos = -1;
   myArray[J].rtPos = -1;
-  myArray[J].immPos = 2;
+  myArray[J].immPos = 0;
+  myArray[J].immLabel = true;
   myArray[J].instType = JTYPE;
   myArray[J].op_field = "000010";
   myArray[J].funct_field = "";
 
-  //UNDEFINED
+  /*//UNDEFINED
   myArray[UNDEFINED].name = "undefined";
   myArray[UNDEFINED].numOps = 0;
   myArray[UNDEFINED].rdPos = -1;
@@ -113,9 +114,9 @@ OpcodeTable::OpcodeTable()
   myArray[UNDEFINED].rtPos = -1;
   myArray[UNDEFINED].immPos = -1;
   myArray[UNDEFINED].instType = JTYPE; // TODO: Undefine type
-  myArray[UNDEFINED].op_field = ""; 
+  myArray[UNDEFINED].op_field = "";
   myArray[UNDEFINED].funct_field = "";
-
+*/
 }
 
 Opcode OpcodeTable::getOpcode(string str)
