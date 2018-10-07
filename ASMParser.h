@@ -14,11 +14,11 @@ using namespace std;
 #include <stdlib.h>
 
 /* This class reads in a MIPS assembly file and checks its syntax.  If
- * the file is syntactically correct, this class will retain a list 
+ * the file is syntactically correct, this class will retain a list
  * of Instructions (one for each instruction from the file).  This
  * list of Instructions can be iterated through.
  */
-   
+
 
 class ASMParser{
  public:
@@ -42,11 +42,11 @@ class ASMParser{
   OpcodeTable opcodes;                     // encodings of opcodes
   int myLabelAddress;   // Used to assign labels addresses
 
-  // Decomposes a line of assembly code into strings for the opcode field and operands, 
+  // Decomposes a line of assembly code into strings for the opcode field and operands,
   // checking for syntax errors and counting the number of operands.
   void getTokens(string line, string &opcode, string *operand, int &num_operands);
 
-  // Given an Opcode, a string representing the operands, and the number of operands, 
+  // Given an Opcode, a string representing the operands, and the number of operands,
   // breaks operands apart and stores fields into Instruction.
   bool getOperands(Instruction &i, Opcode o, string *operand, int operand_count);
 
@@ -68,7 +68,7 @@ class ASMParser{
 
   // Returns true if character is an alphabetic character
   bool isAlpha(char c)         {return (isAlphaUpper(c) || isAlphaLower(c)); };
-  
+
   // Returns true if s represents a valid decimal integer
   bool isNumberString(string s);
 
@@ -79,6 +79,18 @@ class ASMParser{
   // Given a valid instruction, returns a string representing the 32 bit MIPS binary encoding
   // of that instruction.
   string encode(Instruction i);
+
+  //Given a valid R-Type instruction, returns a string representing the 32 bit
+  //MIPS binary of that instruction.
+  string encodeRType(Instruction i);
+
+  //Given a valid J-Type instruction, returns a string representing the 32 bit
+  //MIPS binary of that instruction.
+  string encodeJType(Instruction i);
+
+  //Given a valid I-Type instruction, returns a string representing the 32 bit
+  //MIPS binary of that instruction.
+  string encodeIType(Instruction i);
 
 };
 

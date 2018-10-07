@@ -1,4 +1,5 @@
 #include "ASMParser.h"
+#include <bitset>
 
 ASMParser::ASMParser(string filename)
   // Specify a text file containing MIPS assembly instructions. Function
@@ -29,7 +30,7 @@ ASMParser::ASMParser(string filename)
 	break;
       }
 
-      Opcode o = opcodes.getOpcode(opcode);      
+      Opcode o = opcodes.getOpcode(opcode);
       if(o == UNDEFINED){
 	// invalid opcode specified
 	myFormatCorrect = false;
@@ -61,7 +62,7 @@ Instruction ASMParser::getNextInstruction()
     myIndex++;
     return myInstructions[myIndex-1];
   }
-  
+
   Instruction i;
   return i;
 
@@ -71,7 +72,7 @@ void ASMParser::getTokens(string line,
 			       string &opcode,
 			       string *operand,
 			       int &numOperands)
-  // Decomposes a line of assembly code into strings for the opcode field and operands, 
+  // Decomposes a line of assembly code into strings for the opcode field and operands,
   // checking for syntax errors and counting the number of operands.
 {
     // locate the start of a comment
@@ -120,23 +121,23 @@ void ASMParser::getTokens(string line,
       i++;
     }
 
-    
+
     idx = operand[numOperands-1].find('(');
     string::size_type idx2 = operand[numOperands-1].find(')');
-    
+
     if (idx == string::npos || idx2 == string::npos ||
 	((idx2 - idx) < 2 )){ // no () found
     }
     else{ // split string
       string offset = operand[numOperands-1].substr(0,idx);
       string regStr = operand[numOperands-1].substr(idx+1, idx2-idx-1);
-      
+
       operand[numOperands-1] = offset;
       operand[numOperands] = regStr;
       numOperands++;
     }
-    
-    
+
+
 
     // ignore anything after the whitespace after the operand
     // We could do a further look and generate an error message
@@ -189,11 +190,11 @@ int ASMParser::cvtNumString2Number(string s)
     }
     return val;
 }
-		
 
-bool ASMParser::getOperands(Instruction &i, Opcode o, 
+
+bool ASMParser::getOperands(Instruction &i, Opcode o,
 			    string *operand, int operand_count)
-  // Given an Opcode, a string representing the operands, and the number of operands, 
+  // Given an Opcode, a string representing the operands, and the number of operands,
   // breaks operands apart and stores fields into Instruction.
 {
 
@@ -221,7 +222,7 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
       return false;
 
   }
-  
+
   if(rd_p != -1){
     rd = registers.getNum(operand[rd_p]);
     if(rd == NumRegisters)
@@ -236,7 +237,7 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
       if(abs(imm) > pow(2, 16)) // too big a number to fit
 	return false;
     }
-    else{ 
+    else{
       if(opcodes.isIMMLabel(o)){  // Can the operand be a label?
 	// Assign the immediate field an address
 	imm = myLabelAddress;
@@ -261,37 +262,59 @@ string ASMParser::encode(Instruction i)
   Opcode opcode = i.getOpcode();
   InstType type = opcodes.getInstType(opcode);
 
-  
+
 // string opCode = getOpcodeField(opcode);
   string encoding = "";
-  if(type == RTYPE)
+  if (type == RTYPE)
     encoding = encodeRType(i);
   else if (type == JTYPE)
     encoding = encodeJType(i);
-  else 
+  else
     encoding = encodeIType(i);
     return encoding;
 }
-string ASMParser::toBinary(Register a){
+//string ASMParser::toBinary(Register a){
 
-}
+//}
+
 string ASMParser::encodeRType(Instruction i){
    Opcode opcode = i.getOpcode();
    std::stringstream as;
-   as << ("000000");
+   as << opcodes.getOpcodeField(opcode);
    Register rs = i.getRS();
    Register rd = i.getRD();
    Register rt = i.getRT();
+   int imm = i.getImmediate();
 
-   
-   
+   if (opcodes.RSposition(opcode) == -1)
+     as << "00000";
+   else
+     as << std::bitset<5>(rs).to_string();
+
+   if (opcodes.RDposition(opcode) == -1)
+     as << "00000";
+   else
+     as << std::bitset<5>(rd).to_string();
+
+   if (opcodes.RTposition(opcode) == -1)
+     as << "00000";
+   else
+     as << std::bitset<5>(rt).to_string();
+
+   if (opcodes.IMMposition(opcode) == -1)
+     as << "00000";
+   else
+     as << std::bitset<5>(imm).to_string();
+
+   as << opcodes.getFunctField(opcode);
+
    return  as.str();
 }
 
 string ASMParser::encodeJType(Instruction i){
-
+  return "";
 }
 
 string ASMParser::encodeIType(Instruction i){
-
+  return "";
 }
