@@ -106,17 +106,6 @@ OpcodeTable::OpcodeTable()
   myArray[J].op_field = "000010";
   myArray[J].funct_field = "";
 
-  /*//UNDEFINED
-  myArray[UNDEFINED].name = "undefined";
-  myArray[UNDEFINED].numOps = 0;
-  myArray[UNDEFINED].rdPos = -1;
-  myArray[UNDEFINED].rsPos = -1;
-  myArray[UNDEFINED].rtPos = -1;
-  myArray[UNDEFINED].immPos = -1;
-  myArray[UNDEFINED].instType = JTYPE; // TODO: Undefine type
-  myArray[UNDEFINED].op_field = "";
-  myArray[UNDEFINED].funct_field = "";
-*/
 }
 
 Opcode OpcodeTable::getOpcode(string str)

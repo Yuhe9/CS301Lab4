@@ -257,15 +257,14 @@ bool ASMParser::getOperands(Instruction &i, Opcode o,
 }
 
 
-string ASMParser::encode(Instruction i)
+string ASMParser::encode(Instruction i){
   // Given a valid instruction, returns a string representing the 32 bit MIPS binary encoding
   // of that instruction.
-{
+
   Opcode opcode = i.getOpcode();
   InstType type = opcodes.getInstType(opcode);
 
-
-// string opCode = getOpcodeField(opcode);
+// get the encoding of instruction depend on the instruction type
   string encoding = "";
   if (type == RTYPE)
     encoding = encodeRType(i);
@@ -273,11 +272,13 @@ string ASMParser::encode(Instruction i)
     encoding = encodeJType(i);
   else
     encoding = encodeIType(i);
+
   return encoding;
 }
 
-
 string ASMParser::encodeRType(Instruction i){
+   // Given a valid instruction of R type, returns a string representing the 32 bit MIPS binary encoding
+   // of that instruction.
    Opcode opcode = i.getOpcode();
    stringstream ss;
    ss << opcodes.getOpcodeField(opcode);
@@ -286,6 +287,7 @@ string ASMParser::encodeRType(Instruction i){
    Register rt = i.getRT();
    int imm = i.getImmediate();
 
+// Get RS, RT, RD and Immediate  positions, and append binary encoding of their addresses to the instruction encoding. If none then use 00000 instead
    if (opcodes.RSposition(opcode) == -1)
      ss << "00000";
    else
@@ -301,40 +303,49 @@ string ASMParser::encodeRType(Instruction i){
    else
      ss << bitset<5>(rd).to_string();
 
-
    if (opcodes.IMMposition(opcode) == -1)
      ss << "00000";
    else
      ss << bitset<5>(imm).to_string();
 
+// get the binary encoding of the function field, append it to the instruction encoding at last
    ss << opcodes.getFunctField(opcode);
 
-   return ss.str();
+   return ss.str();// return the 32 bit MIPS binary encding of the R type instruction
 }
+
 
 string ASMParser::encodeJType(Instruction i){
+  // Given a valid instruction of I type, returns a string representing the 32 bit MIPS binary encoding
+  // of that instruction.
   Opcode opcode = i.getOpcode();
   stringstream ss;
-  ss << opcodes.getOpcodeField(opcode);
+  
+  ss << opcodes.getOpcodeField(opcode);// get the 6 bit binary encoding of the opcode field of instruction
 
-  int imm = i.getImmediate()/4;
+  int imm = i.getImmediate()/4; // get the 26 bit binary encoding of the address and offset it by shifting it left 2 positions
   ss << bitset<26>(imm).to_string();
 
-  return ss.str();
+  return ss.str();// return the 32 bit MIPS binary encding of the I type instruction
 }
 
+
 string ASMParser::encodeIType(Instruction i){
+  // Given a valid instruction of J type, returns a string representing the 32 bit MIPS binary encoding
+  // of that instruction.
   Opcode opcode = i.getOpcode();
   stringstream ss;
-  ss << opcodes.getOpcodeField(opcode);
+  ss << opcodes.getOpcodeField(opcode);// get the 6 bits binary encoding of the instruction's opcode field
 
+  // get RS, RT, and Immediate registers
   Register rs = i.getRS();
   Register rt = i.getRT();
   int imm = i.getImmediate();
 
+  // convert them to their own 5 bits or 16 bits binary encoding
   ss << bitset<5>(rs).to_string();
   ss << bitset<5>(rt).to_string();
   ss << bitset<16>(imm).to_string();
 
-  return ss.str();
+  return ss.str();// return the 32 bit MIPS binary encding of the J type instruction
 }
